@@ -45,7 +45,7 @@
     "license":  "MIT",
     "repository":  {
                        "type":  "git",
-                       "url":  "https://example.invalid/capacitor-mantunsci-electric.git"
+                       "url":  "https://github.com/lanyangayang/capacitor-mantunsci-electric.git"
                    },
     "peerDependencies":  {
                              "@capacitor/core":  "\u003e=5.0.0"
