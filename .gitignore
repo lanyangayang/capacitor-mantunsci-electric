@@ -1,0 +1,10 @@
+﻿node_modules/
+dist/
+dist-demo/
+coverage/
+*.log
+.DS_Store
+# never commit credentials
+.env
+.env.*
+demo/.env*

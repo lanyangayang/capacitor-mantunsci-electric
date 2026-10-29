@@ -1,0 +1,73 @@
+{
+    "name":  "@mantunsci/capacitor-electric-open-platform",
+    "version":  "0.1.0",
+    "description":  "Capacitor plugin for the Mtsci 鏅烘収寮忕敤鐢垫暟鎹紑鏀惧钩鍙?(open.snd02.com) 鈥?OAuth2 token lifecycle, MD5 request signing and typed wrappers for the full router.as API.",
+    "main":  "dist/plugin.cjs/index.js",
+    "module":  "dist/esm/index.js",
+    "types":  "dist/esm/index.d.ts",
+    "exports":  {
+                    ".":  {
+                              "types":  "./dist/esm/index.d.ts",
+                              "import":  "./dist/esm/index.js",
+                              "require":  "./dist/plugin.cjs/index.js"
+                          },
+                    "./package.json":  "./package.json"
+                },
+    "files":  [
+                  "dist/",
+                  "src/",
+                  "README.md",
+                  "LICENSE"
+              ],
+    "scripts":  {
+                    "build":  "npm run clean \u0026\u0026 npm run build:esm \u0026\u0026 npm run build:cjs",
+                    "build:esm":  "tsc -p tsconfig.esm.json",
+                    "build:cjs":  "tsc -p tsconfig.cjs.json",
+                    "clean":  "node -e \"require(\u0027fs\u0027).rmSync(\u0027dist\u0027,{recursive:true,force:true})\"",
+                    "test":  "vitest run",
+                    "test:watch":  "vitest",
+                    "lint":  "tsc --noEmit -p tsconfig.json",
+                    "demo":  "vite --config vite.demo.config.ts",
+                    "verify:live":  "node scripts/verify-live.mjs",
+                    "prepublishOnly":  "npm run build"
+                },
+    "keywords":  [
+                     "capacitor",
+                     "plugin",
+                     "capacitor-plugin",
+                     "iot",
+                     "electric",
+                     "snd02",
+                     "mantunsci",
+                     "smart-power"
+                 ],
+    "author":  "ACME 姣呬赴鐢靛櫒",
+    "license":  "MIT",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "https://example.invalid/capacitor-mantunsci-electric.git"
+                   },
+    "peerDependencies":  {
+                             "@capacitor/core":  "\u003e=5.0.0"
+                         },
+    "peerDependenciesMeta":  {
+                                 "@capacitor/preferences":  {
+                                                                "optional":  true
+                                                            }
+                             },
+    "devDependencies":  {
+                            "@capacitor/core":  "^6.1.0",
+                            "@capacitor/preferences":  "^6.0.2",
+                            "typescript":  "^5.6.3",
+                            "vite":  "^5.4.10",
+                            "vitest":  "^2.1.4"
+                        },
+    "capacitor":  {
+                      "android":  {
+                                      "src":  "android/src/main/java/com/mantunsci/capacitor/electric/ElectricOpenPlatformPlugin.java"
+                                  },
+                      "ios":  {
+                                  "src":  "ios/Sources/ElectricOpenPlatformPlugin/ElectricOpenPlatformPlugin.swift"
+                              }
+                  }
+}

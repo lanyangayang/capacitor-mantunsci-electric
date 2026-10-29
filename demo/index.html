@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>智慧式用电开放平台 · Capacitor 插件调试台</title>
+    <style>
+      :root {
+        --bg: #0f1419;
+        --panel: #171d25;
+        --border: #2a3441;
+        --text: #dfe7ef;
+        --muted: #8b9bb0;
+        --accent: #2f9e6e;
+        --danger: #d9544d;
+        --warn: #d9a441;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+      main { display: grid; grid-template-columns: 340px 1fr; height: calc(100vh - 61px); }
+      aside { border-right: 1px solid var(--border); overflow-y: auto; padding: 16px; }
+      section.output { overflow-y: auto; padding: 16px 24px; }
+      fieldset { border: 1px solid var(--border); border-radius: 8px; margin: 0 0 16px; padding: 12px; }
+      legend { color: var(--muted); font-size: 12px; padding: 0 6px; }
+      label { display: block; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
+      input, select {
+        width: 100%;
+        margin-top: 4px;
+        padding: 7px 9px;
+        background: #0c1117;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font: inherit;
+        font-size: 13px;
+      }
+      input:focus, select:focus { outline: 1px solid var(--accent); }
+      button {
+        padding: 7px 12px;
+        background: #202a35;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+        margin: 0 6px 6px 0;
+      }
+      button:hover:not(:disabled) { border-color: var(--accent); }
+      button.primary { background: var(--accent); border-color: var(--accent); color: #06140d; font-weight: 600; }
+      button:disabled { opacity: 0.45; cursor: not-allowed; }
+      .row { display: flex; gap: 8px; }
+      .row > * { flex: 1; }
+      pre {
+        background: #0c1117;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px;
+        overflow: auto;
+        max-height: 45vh;
+        font-size: 12px;
+        margin: 0 0 12px;
+      }
+      .status { font-size: 12px; color: var(--muted); }
+      .ok { color: var(--accent); }
+      .err { color: var(--danger); }
+      .warn { color: var(--warn); }
+      .badge { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px; border: 1px solid var(--border); }
+      table { border-collapse: collapse; width: 100%; font-size: 12px; }
+      th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--border); }
+      th { color: var(--muted); font-weight: 500; position: sticky; top: 0; background: var(--bg); }
+      td.on { color: var(--accent); }
+      td.off { color: var(--muted); }
+      h3 { font-size: 13px; margin: 18px 0 8px; color: var(--muted); font-weight: 600; }
+      .hint { font-size: 11px; color: var(--muted); margin-top: -2px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>智慧式用电开放平台 · Capacitor 插件调试台</h1>
+      <span id="conn" class="badge">未连接</span>
+      <span class="status" id="storage"></span>
+    </header>
+
+    <main>
+      <aside>
+        <fieldset>
+          <legend>接入配置</legend>
+          <label>appKey<input id="appKey" value="O000093290" /></label>
+          <label>appSecret<input id="appSecret" type="password" placeholder="粘贴 appSecret" /></label>
+          <label>redirectUri<input id="redirectUri" value="http://yourserverurl/receive" /></label>
+          <label>projectCode<input id="projectCode" value="P00000104893" /></label>
+          <div class="row">
+            <label>账号<input id="username" value="yfdq01" /></label>
+            <label>密码<input id="password" type="password" /></label>
+          </div>
+          <label>存储
+            <select id="storageMode">
+              <option value="auto">auto（Preferences → localStorage）</option>
+              <option value="preferences">preferences</option>
+              <option value="localStorage">localStorage</option>
+              <option value="memory">memory（不持久化）</option>
+            </select>
+          </label>
+          <button class="primary" id="btnLogin">保存并登录</button>
+          <button id="btnLogout">退出</button>
+          <p class="hint">⚠️ 浏览器直连会被 CORS 拦截：请用 <code>npm run demo</code> 并通过 Capacitor 真机/模拟器运行，或先执行一次“下载数据”查看错误示例。</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>查询</legend>
+          <button id="btnProject">项目信息</button>
+          <button id="btnBoxes">设备列表</button>
+          <button id="btnTree">设备层级</button>
+          <button id="btnRealtime">实时数据</button>
+          <button id="btnAlarms">告警（24h）</button>
+          <button id="btnTimers">定时配置</button>
+          <button id="btnProbe">接口开通探测</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>控制（谨慎操作真实设备）</legend>
+          <div class="row">
+            <label>设备 mac<input id="ctrlMac" placeholder="选择设备" /></label>
+            <label>线路 addr<input id="ctrlAddr" type="number" value="1" /></label>
+          </div>
+          <button id="btnOpen">合闸</button>
+          <button id="btnClose" style="color: var(--danger)">分闸</button>
+        </fieldset>
+      </aside>
+
+      <section class="output">
+        <h3>设备</h3>
+        <div id="boxes"><span class="status">尚未加载</span></div>
+        <h3>实时线路</h3>
+        <div id="channels"><span class="status">尚未加载</span></div>
+        <h3>原始输出</h3>
+        <pre id="log">// 就绪</pre>
+      </section>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
